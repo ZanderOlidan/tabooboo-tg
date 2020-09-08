@@ -10,7 +10,9 @@ import { readFileSync } from 'fs';
 try {
     const bot = new Telegraf(BOT_TOKEN);
     bot.use(Telegraf.log())
-    // bot.telegram.setWebhook(WEBHOOK_URL);
+    bot.telegram.setWebhook(WEBHOOK_URL, {
+        source: SIGNED_CERT
+    }, 100);
 
 
     bot.command('solo', createWordSet);
@@ -20,18 +22,20 @@ try {
     bot.on('text', checkWord);
 
 
-    // bot.startWebhook(WEBHOOK_ENDPOINT, null, WEBHOOK_PORT);
-    bot.launch({
-        webhook: {
-            port: WEBHOOK_PORT,
-            domain: WEBHOOK_URL,
-            host: "127.0.0.1",
-            hookPath: WEBHOOK_ENDPOINT,
-            tlsOptions: {
-                cert: readFileSync(SIGNED_CERT)
-            }
-        }
-    });
+    bot.startWebhook(WEBHOOK_ENDPOINT, {
+        ca: readFileSync(SIGNED_CERT)
+    }, WEBHOOK_PORT);
+    // bot.launch({
+    //     webhook: {
+    //         port: WEBHOOK_PORT,
+    //         domain: WEBHOOK_URL,
+    //         host: "127.0.0.1",
+    //         hookPath: WEBHOOK_ENDPOINT,
+    //         tlsOptions: {
+    //             ca: readFileSync(SIGNED_CERT),
+    //         },
+    //     }
+    // });
 } catch (e) {
     console.error(e);
 }
