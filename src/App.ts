@@ -1,7 +1,7 @@
 import telegraf, { Telegraf, Extra, Markup } from 'telegraf';
 import { createWordSet, showWordSetAction, checkWord } from './services/GameService';
 import { CREATE_WORD_SET, SHOW_WORD_SET } from './ActionNames';
-import { BOT_TOKEN, WEBHOOK_URL } from './EnvironmentVariables';
+import { BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PORT, WEBHOOK_ENDPOINT } from './EnvironmentVariables';
 import * as fastify from 'fastify';
 
 
@@ -17,7 +17,7 @@ bot.action(SHOW_WORD_SET, showWordSetAction);
 bot.on('text', checkWord);
 
 
-bot.startWebhook('/', null, 8443);
+bot.startWebhook(WEBHOOK_ENDPOINT, null, WEBHOOK_PORT);
 // bot.launch();
 
 
