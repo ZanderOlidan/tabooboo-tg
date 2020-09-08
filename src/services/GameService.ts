@@ -22,12 +22,12 @@ const checkWord = async (ctx: TelegrafContext) => {
         if (exists.type === WordType.Answer) {
             deleteWord(ctx.chat.id, exists.userId);
             delete currentPlayer[ctx.chat.id][ctx.from.id];
-            await ctx.replyWithMarkdown("CORRECT!", {
+            await ctx.replyWithMarkdown("⭕ CORRECT!", {
                 reply_to_message_id: ctx.message.message_id
             });
         } else {
             // handle taboo
-            await ctx.replyWithMarkdown(`**TABOO!**`, {
+            await ctx.replyWithHTML(`<b>😡 TABOO!</b>`, {
                 reply_to_message_id: ctx.message.message_id
             });
         }

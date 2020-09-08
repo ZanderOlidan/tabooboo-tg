@@ -17,8 +17,7 @@ bot.action(SHOW_WORD_SET, showWordSetAction);
 bot.on('text', checkWord);
 
 
-
-bot.startWebhook('/', {}, 8443);
+bot.startWebhook('/', null, 8443);
 // bot.launch();
 
 
