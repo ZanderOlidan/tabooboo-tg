@@ -3,6 +3,7 @@ import { createWordSet, showWordSetAction, checkWord } from './services/GameServ
 import { CREATE_WORD_SET, SHOW_WORD_SET } from './ActionNames';
 import { BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PORT, WEBHOOK_ENDPOINT, SIGNED_CERT } from './EnvironmentVariables';
 import * as fastify from 'fastify';
+import { readFileSync } from 'fs';
 
 
 
@@ -27,7 +28,7 @@ try {
             host: "127.0.0.1",
             hookPath: WEBHOOK_ENDPOINT,
             tlsOptions: {
-                cert: SIGNED_CERT
+                cert: readFileSync(SIGNED_CERT)
             }
         }
     });
