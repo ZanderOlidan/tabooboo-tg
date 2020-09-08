@@ -10,7 +10,7 @@ import { readFileSync } from 'fs';
 try {
     const bot = new Telegraf(BOT_TOKEN);
     bot.use(Telegraf.log())
-    bot.telegram.setWebhook(`${WEBHOOK_URL}/${WEBHOOK_ENDPOINT}/bot`, {
+    bot.telegram.setWebhook(`${WEBHOOK_URL}/${WEBHOOK_ENDPOINT}/bot${BOT_TOKEN}`, {
         source: SIGNED_CERT
     }, 100);
 
