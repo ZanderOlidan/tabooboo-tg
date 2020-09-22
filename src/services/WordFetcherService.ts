@@ -14,11 +14,11 @@ interface IGroupWordSet {
         [userId: number]: WordSet
     }
 }
-const wordSets: IGroupWordSet = {};
+export const wordSets: IGroupWordSet = {};
 const tabooList: IWordOption = {};
 const answerList: IWordOption = {};
 
-const fetchWordSetRequest = async () => {
+const fetchWordSetRequest = async (userId: number) => {
     try {
         const rawWordSet = await got(`https://playtaboo.com/ajax/v1/next?${dayjs().valueOf()}`);
         const parsedWordSet = htmlParser(rawWordSet.body);
@@ -27,6 +27,7 @@ const fetchWordSetRequest = async () => {
         return new WordSet({
             Answer: parsedWordSet.querySelector('h2').rawText,
             Taboos: taboos.map(w => w.rawText),
+            UserId: userId,
         });
     } catch (e) {
         console.error(e);
@@ -34,7 +35,7 @@ const fetchWordSetRequest = async () => {
 };
 
 const fetchAndStoreWordSet = async (userGroup: number, userId: number) => {
-    const wordset = await fetchWordSetRequest();
+    const wordset = await fetchWordSetRequest(userId);
     wordSets[userGroup] = {
         [userId]: wordset
     };
@@ -58,8 +59,8 @@ const getWordSet = async (userGroup: number, userId: number): Promise<WordSet> =
     const stored = wordSets?.[userGroup]?.[userId];
     if (stored) {
         return stored;
-    } else {
-        return fetchAndStoreWordSet(userGroup, userId);
+    // } else {
+    //     return fetchAndStoreWordSet(userGroup, userId);
     }
 };
 
@@ -98,5 +99,6 @@ export {
     fetchWordSetRequest,
     getWordSet,
     isWordExist,
-    deleteWord
+    deleteWord,
+    fetchAndStoreWordSet
 }

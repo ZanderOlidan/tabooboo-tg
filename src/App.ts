@@ -8,9 +8,7 @@ import { readFileSync } from 'fs';
     try {
         const bot = new Telegraf(BOT_TOKEN);
 
-
         bot.command('solo', createWordSet);
-        bot.command('test', ctx => ctx.reply('lol'));
 
         bot.action(SHOW_WORD_SET, showWordSetAction);
         bot.on('text', checkWord);

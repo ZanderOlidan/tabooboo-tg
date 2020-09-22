@@ -1,14 +1,14 @@
 import { TelegrafContext } from "telegraf/typings/context";
 import { SHOW_WORD_SET } from "../ActionNames";
 import { Extra } from "telegraf";
-import { getWordSet, isWordExist, deleteWord } from "./WordFetcherService";
+import { getWordSet, isWordExist, deleteWord, fetchWordSetRequest, fetchAndStoreWordSet, wordSets } from "./WordFetcherService";
 import { WordType } from "../models/WordTypeEnum";
 
 
 const currentPlayer = {};
 
 const showWordSetAction = async (ctx: TelegrafContext) => {
-    if (currentPlayer?.[ctx.chat.id]?.[ctx.from.id]) {
+    if (wordSets?.[ctx.chat.id]?.[ctx.from.id]) {
         const wordSet = await getWordSet(ctx.chat.id, ctx.from.id);
         await ctx.answerCbQuery(`${wordSet.Answer}\n\nDo NOT mention these words:\n${wordSet.Taboos.reduce((a, w) => '- ' + w + '\n' + a, '')}`, true)
         return;
@@ -35,11 +35,8 @@ const checkWord = async (ctx: TelegrafContext) => {
     }
 };
 
-const createWordSet = (ctx: TelegrafContext) => {
-    currentPlayer[ctx.chat.id] = {
-        ...currentPlayer[ctx.chat.id],
-        [ctx.from.id]: `${ctx.from.first_name} ${ctx.from.last_name}`
-    }
+const createWordSet = async (ctx: TelegrafContext) => {
+    await fetchAndStoreWordSet(ctx.chat.id, ctx.from.id);
     return ctx.reply(`${ctx.from.first_name}'s word`, Extra.HTML()
         .markup((m) =>
             m.inlineKeyboard([
