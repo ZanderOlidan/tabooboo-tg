@@ -4,7 +4,7 @@
   "description": "TG Word game",
   "main": "dist/App.js",
   "scripts": {
-    "start": "tsc && node dist/App.js"
+    "start": "tsc && node dist/app.js"
   },
   "repository": {
     "type": "git",

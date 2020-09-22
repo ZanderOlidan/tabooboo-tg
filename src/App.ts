@@ -1,18 +1,11 @@
-import telegraf, { Telegraf, Extra, Markup } from 'telegraf';
+import telegraf, { Telegraf } from 'telegraf';
 import { createWordSet, showWordSetAction, checkWord } from './services/GameService';
-import { CREATE_WORD_SET, SHOW_WORD_SET } from './ActionNames';
-import { BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PORT, WEBHOOK_ENDPOINT, SIGNED_CERT } from './EnvironmentVariables';
-import * as fastify from 'fastify';
+import { SHOW_WORD_SET } from './ActionNames';
+import { BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PORT, WEBHOOK_ENDPOINT, SIGNED_CERT, ENVIRONMENT } from './EnvironmentVariables';
 import { readFileSync } from 'fs';
-
-
-
 try {
     const bot = new Telegraf(BOT_TOKEN);
     bot.use(Telegraf.log())
-    bot.telegram.setWebhook(`${WEBHOOK_URL}/${WEBHOOK_ENDPOINT}/bot${BOT_TOKEN}`, {
-        source: SIGNED_CERT
-    }, 100);
 
 
     bot.command('solo', createWordSet);
@@ -21,21 +14,18 @@ try {
     bot.action(SHOW_WORD_SET, showWordSetAction);
     bot.on('text', checkWord);
 
+    if (ENVIRONMENT.includes('dev')) {
+        bot.telegram.setWebhook(`${WEBHOOK_URL}/bot${BOT_TOKEN}`);
+        bot.startWebhook(WEBHOOK_ENDPOINT, {}, 8443);
+    } else {
+        bot.telegram.setWebhook(`${WEBHOOK_URL}/${WEBHOOK_ENDPOINT}/bot${BOT_TOKEN}`, {
+            source: SIGNED_CERT,
+        }, 100);
+        bot.startWebhook(WEBHOOK_ENDPOINT, {
+            ca: readFileSync(SIGNED_CERT),
+        }, WEBHOOK_PORT, "127.0.0.1");
+    }
 
-    bot.startWebhook(WEBHOOK_ENDPOINT, {
-        ca: readFileSync(SIGNED_CERT)
-    }, WEBHOOK_PORT);
-    // bot.launch({
-    //     webhook: {
-    //         port: WEBHOOK_PORT,
-    //         domain: WEBHOOK_URL,
-    //         host: "127.0.0.1",
-    //         hookPath: WEBHOOK_ENDPOINT,
-    //         tlsOptions: {
-    //             ca: readFileSync(SIGNED_CERT),
-    //         },
-    //     }
-    // });
 } catch (e) {
     console.error(e);
 }

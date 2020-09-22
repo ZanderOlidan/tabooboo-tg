@@ -25,8 +25,8 @@ const checkWord = async (ctx: TelegrafContext) => {
             await ctx.replyWithMarkdown("⭕ CORRECT!", {
                 reply_to_message_id: ctx.message.message_id
             });
-        } else {
-            // handle taboo
+        }
+        if (ctx.from.id === exists.userId) {
             await ctx.replyWithHTML(`<b>😡 TABOO!</b>`, {
                 reply_to_message_id: ctx.message.message_id
             });
