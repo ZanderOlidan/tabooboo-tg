@@ -6,7 +6,7 @@ const WEBHOOK_URL = process.env.WEBHOOK_URL;
 const WEBHOOK_PORT = process.env.WEBHOOK_PORT ? parseInt(process.env.WEBHOOK_PORT, 10) : 8443;
 const WEBHOOK_ENDPOINT = process.env.WEBHOOK_ENDPOINT;
 const SIGNED_CERT = process.env.SIGNED_CERT;
-const ENVIRONMENT = process.env.ENVIRONMENT ?? "development";
+const ENVIRONMENT = process.env.ENVIRONMENT;
 
 export {
     BOT_TOKEN,
