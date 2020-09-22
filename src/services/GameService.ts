@@ -5,8 +5,6 @@ import { getWordSet, isWordExist, deleteWord, fetchWordSetRequest, fetchAndStore
 import { WordType } from "../models/WordTypeEnum";
 
 
-const currentPlayer = {};
-
 const showWordSetAction = async (ctx: TelegrafContext) => {
     if (wordSets?.[ctx.chat.id]?.[ctx.from.id]) {
         const wordSet = await getWordSet(ctx.chat.id, ctx.from.id);
@@ -21,7 +19,6 @@ const checkWord = async (ctx: TelegrafContext) => {
     if (exists) {
         if (exists.type === WordType.Answer) {
             deleteWord(ctx.chat.id, exists.userId);
-            delete currentPlayer[ctx.chat.id][ctx.from.id];
             await ctx.replyWithMarkdown("⭕ CORRECT!", {
                 reply_to_message_id: ctx.message.message_id
             });
