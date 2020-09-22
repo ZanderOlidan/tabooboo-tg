@@ -7,7 +7,9 @@ import { readFileSync } from 'fs';
 (async () => {
     try {
         const bot = new Telegraf(BOT_TOKEN);
-        bot.use(Telegraf.log())
+        if (ENVIRONMENT.includes('dev')) {
+            bot.use(Telegraf.log())
+        }
 
 
         bot.command('solo', createWordSet);
