@@ -85,11 +85,13 @@ const isWordExist = (userGroup: number, word: string) => {
 
 const deleteWord = (userGroup: number, userId: number) => {
     const wordSet = wordSets[userGroup][userId];
-    wordSet.Taboos.forEach(w => {
-        delete tabooList[userGroup][w];
-    });
-    delete answerList[userGroup][wordSet.Answer]
-    delete wordSets[userGroup][userId];
+    if (wordSet) {
+        wordSet.Taboos.forEach(w => {
+            delete tabooList[userGroup][w];
+        });
+        delete answerList[userGroup][wordSet.Answer]
+        delete wordSets[userGroup][userId];
+    }
 }
 
 export {
